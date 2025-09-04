@@ -598,7 +598,7 @@ public abstract class AbstractStructure {
     public StructureModifier<List<PlayerInfoData>> getPlayerInfoDataLists() {
         // Convert to and from the ProtocolLib wrapper
         return structureModifier.withType(
-                Collection.class,
+                List.class,
                 BukkitConverters.getListConverter(PlayerInfoData.getConverter()));
     }
 
@@ -708,7 +708,7 @@ public abstract class AbstractStructure {
     public StructureModifier<Set<EnumWrappers.PlayerInfoAction>> getPlayerInfoActions() {
         // Convert to and from the wrapper
         return structureModifier.withType(
-                EnumSet.class,
+                Set.class,
                 Converters.collection(
                         EnumWrappers.getPlayerInfoActionConverter(),
                         generic -> EnumSet.noneOf(EnumWrappers.PlayerInfoAction.class),

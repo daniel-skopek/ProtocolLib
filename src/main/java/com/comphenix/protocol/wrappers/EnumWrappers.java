@@ -798,10 +798,20 @@ public abstract class EnumWrappers {
             SCOREBOARD_ACTION_CLASS = getEnum(PacketType.Play.Server.SCOREBOARD_SCORE.getPacketClass(), 0);
             PARTICLE_CLASS = getEnum(PacketType.Play.Server.WORLD_PARTICLES.getPacketClass(), 0);
 
-            PLAYER_INFO_ACTION_CLASS = getEnum(PacketType.Play.Server.PLAYER_INFO.getPacketClass(), 0);
-            if (PLAYER_INFO_ACTION_CLASS == null) {
-                // todo: we can also use getField(0).getGenericType().getTypeParameters()[0]; but this should hold for now
-                PLAYER_INFO_ACTION_CLASS = PacketType.Play.Server.PLAYER_INFO.getPacketClass().getClasses()[1];
+            try {
+                PLAYER_INFO_ACTION_CLASS =
+                        Class.forName("net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket$Action");
+            } catch (ClassNotFoundException ignored) {
+                try {
+                    PLAYER_INFO_ACTION_CLASS =
+                            Class.forName("net.minecraft.server.PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
+                } catch (ClassNotFoundException ignored2) {
+                    PLAYER_INFO_ACTION_CLASS = getEnum(PacketType.Play.Server.PLAYER_INFO.getPacketClass(), 0);
+                    if (PLAYER_INFO_ACTION_CLASS == null) {
+                        Class<?>[] inners = PacketType.Play.Server.PLAYER_INFO.getPacketClass().getClasses();
+                        if (inners.length > 0) PLAYER_INFO_ACTION_CLASS = inners[0];
+                    }
+                }
             }
 
             try {
